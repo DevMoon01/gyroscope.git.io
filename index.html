@@ -22,7 +22,7 @@
 
 
     <script>
-        const title = document.querySelector("heroTitle"); // Seleziona direttamente l'elemento h1
+          const title = document.querySelector("heroTitle"); // Seleziona direttamente l'elemento h1
 
         if (window.DeviceOrientationEvent) {
             if (typeof DeviceOrientationEvent.requestPermission === "function") {
@@ -40,12 +40,16 @@
 
         function startGyroscope() {
             window.addEventListener("deviceorientation", (event) => {
-                const tiltX = event.gamma || 0;
-                const tiltY = event.beta || 0;
+                let tiltX = event.gamma || 0;  // Movimento laterale
+                let tiltY = event.beta || 0;   // Inclinazione verticale
+
+                // **Limitazioni per evitare spostamenti eccessivi**
+                tiltX = Math.min(Math.max(tiltX, -30), 30); // Max ±30°
+                tiltY = Math.min(Math.max(tiltY, -30), 30); // Max ±30°
 
                 gsap.to(title, {
-                    x: tiltX * 3,
-                    y: tiltY * 2,
+                    x: tiltX * 2,  // Ridotto l'influenza del movimento orizzontale
+                    y: tiltY * 1.2, // Calibrato il movimento verticale per evitare troppa discesa
                     duration: 0.5,
                     ease: "power2.out"
                 });
