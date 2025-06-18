@@ -19,6 +19,40 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <script src="script.js"></script>
+
+
+    <script>
+        const title = document.querySelector("heroTitle"); // Seleziona direttamente l'elemento h1
+
+        if (window.DeviceOrientationEvent) {
+            if (typeof DeviceOrientationEvent.requestPermission === "function") {
+                document.body.addEventListener("click", () => {
+                    DeviceOrientationEvent.requestPermission().then((response) => {
+                        if (response === "granted") {
+                            startGyroscope();
+                        }
+                    }).catch(console.error);
+                });
+            } else {
+                startGyroscope();
+            }
+        }
+
+        function startGyroscope() {
+            window.addEventListener("deviceorientation", (event) => {
+                const tiltX = event.gamma || 0;
+                const tiltY = event.beta || 0;
+
+                gsap.to(title, {
+                    x: tiltX * 3,
+                    y: tiltY * 2,
+                    duration: 0.5,
+                    ease: "power2.out"
+                });
+            });
+        }
+
+    </script>
 </body>
 
 </html>
